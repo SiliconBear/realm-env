@@ -16,6 +16,12 @@ OR
 $ yarn add realm-env
 ```
 
+OR
+```bash
+$ npm install <git repo url>
+```
+
+
 Add script in  ``` package.json ```
 
 ```json
