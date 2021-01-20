@@ -13,19 +13,20 @@ const files = [...functions, ...triggers]
 
 const dest = path.join(__dirname, '../../../', config.destFolder)
 
-if (!fs.existsSync(path.join(dest, 'functions'))) { fs.mkdirSync(path.join(dest, 'functions')) }
-if (!fs.existsSync(path.join(dest, 'triggers'))) { fs.mkdirSync(path.join(dest, 'triggers')) }
-
 for (const file of files) {
+  const environment = file.env ?? "default";
+  if (!fs.existsSync(path.join(dest, environment, 'functions'))) { fs.mkdirSync(path.join(dest, environment, 'functions'), { recursive: true }) }
+  if (!fs.existsSync(path.join(dest, environment, 'triggers'))) { fs.mkdirSync(path.join(dest, environment, 'triggers'), { recursive: true }) }
+
   switch (file.type) {
     case 'function':
-      const folderPath = path.join(dest, 'functions', file.name)
+      const folderPath = path.join(dest, environment, 'functions', file.name)
       if (!fs.existsSync(folderPath)) { fs.mkdirSync(folderPath) }
       fs.writeFileSync(path.join(folderPath, 'source.js'), file.file)
       fs.writeFileSync(path.join(folderPath, 'config.json'), file.config)
       break;
     case 'trigger':
-      fs.writeFileSync(path.join(dest, 'triggers', file.fileName), file.file)
+      fs.writeFileSync(path.join(dest, environment, 'triggers', file.fileName), file.file)
       break;
     default:
       return
